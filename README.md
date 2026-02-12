@@ -1,4 +1,4 @@
-# LangExtract-Cli Web Demo
+# LangExtract-Example Web Demo
 
 一个最小可运行的 Web 程序：在网页输入文本，调用 `langextract` + OpenAI 模型输出结构化 JSON。
 
