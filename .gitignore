@@ -1,0 +1,15 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+
+# Local runtime files
+server.log
+.env
+
+# OS/IDE
+.DS_Store
+.idea/
+.vscode/

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LangExtract Web Demo</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; max-width: 980px; }
+    textarea, input { width: 100%; padding: 10px; margin-top: 6px; box-sizing: border-box; }
+    textarea { min-height: 180px; font-family: Consolas, monospace; }
+    .row { margin-bottom: 14px; }
+    button { padding: 10px 16px; cursor: pointer; }
+    pre {
+      background: #f6f8fa;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 12px;
+      overflow: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .error { color: #b00020; }
+    .hint { color: #666; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <h1>LangExtract 文本结构化工具</h1>
+  <p class="hint">输入文本后，调用 langextract + OpenAI 兼容接口返回结构化抽取结果。</p>
+
+  <form method="post" action="/extract">
+    <div class="row">
+      <label for="model_id">模型 ID（如 gpt-4o-mini）</label>
+      <input id="model_id" name="model_id" value="{{ model_id or 'gpt-4o-mini' }}" required />
+    </div>
+
+    <div class="row">
+      <label for="api_key">API Key（可选，不填则读取环境变量 OPENAI_API_KEY）</label>
+      <input id="api_key" name="api_key" type="password" placeholder="sk-..." />
+    </div>
+
+    <div class="row">
+      <label for="base_url">兼容接口 Base URL（可选，不填则读取环境变量 OPENAI_BASE_URL）</label>
+      <input id="base_url" name="base_url" value="{{ base_url or '' }}" placeholder="https://api.openai.com/v1" />
+    </div>
+
+    <div class="row">
+      <label for="prompt_description">抽取任务描述</label>
+      <textarea id="prompt_description" name="prompt_description">提取文本中的人物(Person)、组织(Organization)、地点(Location)、时间(Time)、金额(Money)和关键事件(Event)。
+要求：
+1) extraction_text 必须与原文完全一致；
+2) attributes 中可包含标准化信息（如日期标准化、金额币种等）；
+3) 按原文出现顺序输出。</textarea>
+    </div>
+
+    <div class="row">
+      <label for="input_text">输入文本</label>
+      <textarea id="input_text" name="input_text" placeholder="请粘贴要结构化的文本..." required>{{ input_text or '' }}</textarea>
+    </div>
+
+    <button type="submit">开始抽取</button>
+  </form>
+
+  {% if error %}
+    <h2 class="error">执行失败</h2>
+    <pre class="error">{{ error }}</pre>
+  {% endif %}
+
+  {% if result_json %}
+    <h2>结构化结果（JSON）</h2>
+    <pre>{{ result_json }}</pre>
+  {% endif %}
+</body>
+</html>
